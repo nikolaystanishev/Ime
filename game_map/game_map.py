@@ -3,7 +3,7 @@ import pandas as pd
 import termbox
 
 
-from entities import Player, Enemy, Wall, Treasure, EndLevel, Empty
+from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel, Empty
 
 
 class GameMap:
