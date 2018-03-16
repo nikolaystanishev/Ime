@@ -1,5 +1,7 @@
 import numpy as np
 import pandas as pd
+import termbox
+
 
 from entities import Player, Enemy, Wall, Treasure, EndLevel, Empty
 
@@ -18,17 +20,17 @@ class GameMap:
         for row in range(grid_size[0]):
             for col in range(grid_size[1]):
                 if grid[row][col] == 0:
-                    entitie = Empty(row, col)
+                    entitie = Empty(col, row)
                 elif grid[row][col] == 1:
-                    entitie = Player(row, col)
+                    entitie = Player(col, row)
                 elif grid[row][col] == 2:
-                    entitie = Enemy(row, col)
+                    entitie = Enemy(col, row)
                 elif grid[row][col] == 3:
-                    entitie = Wall(row, col)
+                    entitie = Wall(col, row)
                 elif grid[row][col] == 4:
-                    entitie = Treasure(row, col)
+                    entitie = Treasure(col, row)
                 elif grid[row][col] == 5:
-                    entitie = EndLevel(row, col)
+                    entitie = EndLevel(col, row)
 
                 entities.append(entitie)
 
@@ -43,7 +45,21 @@ class GameMap:
     def get_entities(self):
         return self.entities
 
+    def draw_map(self, tb):
+        fg = termbox.BLACK
+        bg = termbox.CYAN
+
+        for entitie in self.entities:
+            coordinates = entitie.get_coordinates()
+            symbol = entitie.get_symbol()
+            tb.change_cell(coordinates[0], coordinates[1], symbol, fg, bg)
+
 
 if __name__ == '__main__':
     gm = GameMap("./game_map/game_map.csv")
-    print(gm.get_entities())
+
+    with termbox.Termbox() as tb:
+        while True:
+            tb.clear()
+            gm.draw_map(tb)
+            tb.present()
