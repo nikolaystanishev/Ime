@@ -8,6 +8,7 @@ class Inventory:
 		self.health = health
 
 	def take_item(self, entity):
+		entity.enabled = False
 		item = deepcopy(entity.get_items())
 		if len(item) != 0:
 			self.items += item
@@ -30,8 +31,7 @@ class Inventory:
 		return items
 
 	def __str__(self):
-		return_str = "|Your inventory contains:\n"
+		return_str = "Your inventory contains:\n"
 		for item in self.items:
 			return_str += str(item)
-		return_str += '|'
 		return return_str
