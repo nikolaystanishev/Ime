@@ -10,16 +10,17 @@ class GameMap:
 
     def __init__(self, game_map_file):
         self.player = None
+        self.grid_size = None
         self.entities = self.create_entities(game_map_file)
 
     def create_entities(self, game_map_file):
         grid = self.create_grid(game_map_file)
-        grid_size = grid.shape
+        self.grid_size = grid.shape
 
         entities = []
 
-        for row in range(grid_size[0]):
-            for col in range(grid_size[1]):
+        for row in range(self.grid_size[0]):
+            for col in range(self.grid_size[1]):
                 entitie = None
 
                 if grid[row][col] == 1:
@@ -56,7 +57,8 @@ class GameMap:
         self.player.draw(tb)
 
     def move_player(self, tb, event_actions):
-        self.player.change_coordinates(event_actions)
+        self.player.change_coordinates(event_actions, self.entities,
+                                       self.grid_size)
 
         self.draw_map(tb)
 

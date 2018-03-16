@@ -28,7 +28,7 @@ class Player(Entity):
         symbol = 65
         super().__init__(x, y, symbol)
 
-    def change_coordinates(self, event_actions):
+    def change_coordinates(self, event_actions, entities, grid_size):
         new_x = self.x
         new_y = self.y
 
@@ -41,8 +41,13 @@ class Player(Entity):
         elif event_actions['MOVE LEFT']:
             new_x -= 1
 
-        self.x = new_x
-        self.y = new_y
+        if self.is_move_valid(new_x, new_y, grid_size):
+            self.x = new_x
+            self.y = new_y
+
+    def is_move_valid(self, new_x, new_y, max_sizes):
+        max_y, max_x = max_sizes
+        return not (new_x < 0 or new_y < 0 or new_x >= max_x or new_y >= max_y)
 
 
 class Enemy(Entity):
