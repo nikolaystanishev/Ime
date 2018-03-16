@@ -18,7 +18,7 @@ class HealingItem(Item):
 		inventory.add_health(heal)
 
 	def __str__(self):
-		return "Heal yourself for {0}".format(self.heal)
+		return "|Heal potion! Heal yourself for {0}|".format(self.heal)
 
 
 class DamageItem(Item):
@@ -27,3 +27,6 @@ class DamageItem(Item):
 
 	def use(inventory):
 		inventory.add_damage(damage)
+
+	def __str__(self):
+		return "|Damage potion! Add {0} damage to your combat stats|".format(self.dmg)
