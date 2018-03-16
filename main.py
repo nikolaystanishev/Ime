@@ -1,7 +1,7 @@
 import pygame.time
 import termbox
 from user_input.input_handler import InputHandler
-from user_input.events import EVENT_ACTIONS
+from user_input.events import MAP_EVENT_ACTIONS
 from game_map.game_map import GameMap
 
 
@@ -17,7 +17,7 @@ tb.present()
 
 
 def update(ticks):
-    game_map.move_player(tb, EVENT_ACTIONS)
+    game_map.move_player(tb, MAP_EVENT_ACTIONS)
     entities = game_map.get_entities()
     player = game_map.get_player()
     if not player.check_collision(entities):

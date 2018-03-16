@@ -1,5 +1,7 @@
 import termbox
 
+from typing import List,Tuple,Set,Dict# perhaps add type annotations
+# to at least the tricky operations that return a custom type to help the ide
 
 class Entity:
 
