@@ -1,5 +1,5 @@
 import termbox
-from events import EVENT_ACTIONS
+from user_input.events import EVENT_ACTIONS
 
 
 class InputHandler(object):
