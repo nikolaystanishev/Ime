@@ -12,7 +12,7 @@ class Entity:
         self.enabled = enabled
         self.symbol = symbol
 
-    def get_coordinates(self):
+    def get_position(self):
         return (self.x, self.y)
 
     def get_symbol(self):
@@ -20,6 +20,9 @@ class Entity:
 
     def get_items(self):
         return self.items
+
+    def update(self, ms):
+        return
 
     def draw(self, tb):
         fg = termbox.BLACK
@@ -42,44 +45,53 @@ class Player(Entity):
     def get_combat_stats(self):
         return self.inventory.get_combat_stats()
 
-    def change_coordinates(self, event_actions, entities, grid_size):
+    def update(self, ms, event_actions):
         new_x = self.x
         new_y = self.y
+        has_new = False
 
         if event_actions['MOVE UP']:
             new_y -= 1
+            has_new = True
         elif event_actions['MOVE DOWN']:
             new_y += 1
+            has_new = True
         elif event_actions['MOVE RIGHT']:
             new_x += 1
+            has_new = True
         elif event_actions['MOVE LEFT']:
             new_x -= 1
+            has_new = True
 
-        if self.is_move_valid(new_x, new_y, grid_size):
+        if has_new:
             self.last_x = self.x
             self.last_y = self.y
-            self.x = new_x
-            self.y = new_y
+
+        self.x = new_x
+        self.y = new_y
+        
+
 
     def return_to_last_pos(self):
         self.x = self.last_x
         self.y = self.last_y
 
-    def is_move_valid(self, new_x, new_y, max_sizes):
-        max_y, max_x = max_sizes
-        return (not (new_x < 0 or new_y < 0 or new_x >= max_x or new_y >= max_y))
+    def on_collision(self, entity):
+        # Check Entity type for Enemy
+        if type(entity) is Treasure:
+            self.inventory.take_item(entity)
 
-    def check_collision(self, entities):
+    def handle_collision(self, entities):
+        is_colliding = False
         for entity in entities:
+            if entity == self:
+                continue
             if entity.x == self.x and self.y == entity.y and entity.enabled:
-                # Check Entity type for Enemy
-                if type(entity) is Treasure:
-                    self.inventory.take_item(entity)
-                    return True
-                return False
-        return True
-
-
+                self.on_collision(entity)
+                is_colliding = True
+        if is_colliding:
+            self.return_to_last_pos()
+            
 
 class Enemy(Entity):
 
