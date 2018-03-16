@@ -14,7 +14,8 @@ class Inventory:
 			self.items += item
 	
 	def use_item(self, item_num):
-		self.items[item_num].use()
+		self.items[item_num].use(self)
+		del self.items[item_num]
 
 	def add_damage(self, damage):
 		self.damage += damage
@@ -24,6 +25,12 @@ class Inventory:
 
 	def get_combat_stats(self):
 		return (self.health, self.damage)
+
+	def get_health(self):
+		return self.health
+
+	def get_damage(self):
+		return self.damage
 
 	def lose_inventory(self):
 		items = self.items
