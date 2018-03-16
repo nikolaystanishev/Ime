@@ -2,48 +2,47 @@ from Inventory import Inventory
 from Item import HealingItem, DamageItem
 from typing import Type, Tuple
 
-# added for testing purpose
-BATTLE_ACTIONS = ['attack', 'defend', 'use']
+class Fight:
+    def __init__(self, player_inventory, enemy_inventory):
+        self.player_inventory = player_inventory
+        self.enemy_inventory = enemy_inventory
+        self.actions = {
+            BattleAction.ATTACK: self.attack,
+            BattleAction.DEFEND: self.defend
+        }
 
+    def execute_player_action(self, action: Type[BattleAction]):
+        self.actions[action](self.player_inventory, self.enemy_inventory)
 
-class FightingMechanics:
+    def execute_player_use(self, item: int):
+        self.player_inventory.use(item)
 
-    def fight(self, player_inventory: Type[Inventory], enemy_inventory: Type[Inventory]):
-        turn_order = (player_inventory, enemy_inventory)
-        while not self.is_dead_entity(player_inventory, enemy_inventory):
-            user_inp = self.get_user_input()
-            # This should be done using the input from the terminal
-            if user_inp[0] == 'attack':
-                self.attack(turn_order[0], turn_order[1])
-            if user_inp[0] == 'use':
-                turn_order[0].use_item(int(user_inp[1]))
-            print(player_inventory.health)
-            turn_order = FightingTurns.next_turn(turn_order[0], turn_order[1])
-
-    # This method is added just for testing purposes
-    def get_user_input(self):
-        inp = input()
-        inp = inp.split()
-        if inp[0] in BATTLE_ACTIONS:
-            return inp
+    def evaluate_enemy_action(self):
+        # For now just Attack
+        self.attack(self.enemy_inventory, self.player_inventory)
 
     def attack(self, from_inv: Type[Inventory], to_inv: Type[Inventory]):
         dmg = from_inv.get_damage()
+        if to_inv.get_defence(): 
+            dmg *= 0.7
         to_inv.add_health(-dmg)
 
-    def is_dead_entity(self, player_inventory: Type[Inventory], enemy_inventory: Type[Inventory]):
-        return player_inventory.get_health() <= 0 or\
-               enemy_inventory.get_health() <= 0
+    def defend(self, inv):
+        inv.set_defence(True)
+
+    def reset_effects(self):
+        self.player_inventory.set_defence(False)
+        self.enemy_inventory.set_defence(False)
 
 
-class FightingTurns:
-    @classmethod
-    def next_turn(turn, played_inv: Type[Inventory], to_be_played_inv: Type[Inventory]) -> Tuple[Type[Inventory], Type[Inventory]]:
-        return (to_be_played_inv, played_inv)
+class BattleAction(enum.Enum):
+    ATTACK = 0
+    DEFEND = 1
+    USE = 2
 
 
 if __name__ == '__main__':
-    fm = FightingMechanics()
+    fm = Fight()
     pl = Inventory(10, 50)
     pl.items =  [HealingItem(1000), DamageItem(50)]
     ai = Inventory(40, 20)

@@ -6,6 +6,7 @@ class Inventory:
 		self.items = []
 		self.damage= damage
 		self.health = health
+		self.defence = False
 
 	def take_item(self, entity):
 		entity.enabled = False
@@ -31,6 +32,12 @@ class Inventory:
 
 	def get_damage(self):
 		return self.damage
+
+	def set_defence(self, defence):
+		self.defence = defence
+
+	def get_defence(self):
+		return defence
 
 	def lose_inventory(self):
 		items = self.items
