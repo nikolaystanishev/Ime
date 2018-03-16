@@ -28,6 +28,22 @@ class Player(Entity):
         symbol = 65
         super().__init__(x, y, symbol)
 
+    def change_coordinates(self, event_actions):
+        new_x = self.x
+        new_y = self.y
+
+        if event_actions['MOVE UP']:
+            new_y -= 1
+        elif event_actions['MOVE DOWN']:
+            new_y += 1
+        elif event_actions['MOVE RIGHT']:
+            new_x += 1
+        elif event_actions['MOVE LEFT']:
+            new_x -= 1
+
+        self.x = new_x
+        self.y = new_y
+
 
 class Enemy(Entity):
 

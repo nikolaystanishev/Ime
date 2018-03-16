@@ -53,6 +53,13 @@ class GameMap:
         for entitie in self.entities:
             entitie.draw(tb)
 
+        self.player.draw(tb)
+
+    def move_player(self, tb, event_actions):
+        self.player.change_coordinates(event_actions)
+
+        self.draw_map(tb)
+
 
 if __name__ == '__main__':
     gm = GameMap("./game_map/game_map.csv")
