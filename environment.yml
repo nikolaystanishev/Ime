@@ -1,0 +1,25 @@
+name: ime
+channels:
+  - defaults
+dependencies:
+  - ca-certificates=2017.08.26
+  - certifi=2018.1.18
+  - django=2.0.2
+  - libedit=3.1
+  - libffi=3.2.1
+  - libgcc-ng=7.2.0
+  - libstdcxx-ng=7.2.0
+  - ncurses=6.0
+  - openssl=1.0.2n
+  - pip=9.0.1
+  - python=3.6.4
+  - pytz=2018.3
+  - readline=7.0
+  - setuptools=38.5.1
+  - sqlite=3.22.0
+  - tk=8.6.7
+  - wheel=0.30.0
+  - xz=5.2.3
+  - zlib=1.2.11
+prefix: /home/nikolay/anaconda3/envs/ime
+
