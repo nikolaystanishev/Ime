@@ -9,6 +9,7 @@ from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel
 class GameMap:
 
     def __init__(self, game_map_file):
+        self.player = None
         self.entities = self.create_entities(game_map_file)
 
     def create_entities(self, game_map_file):
@@ -23,6 +24,8 @@ class GameMap:
 
                 if grid[row][col] == 1:
                     entitie = Player(col, row)
+                    self.player = entitie
+                    continue
                 elif grid[row][col] == 2:
                     entitie = Enemy(col, row)
                 elif grid[row][col] == 3:
