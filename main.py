@@ -1,5 +1,7 @@
 import pygame.time
 import termbox
+from ui import UI
+from textbox import TextBox
 
 pygame.init()
 last_frame_time = 0
@@ -11,6 +13,7 @@ def update(ticks):
 
 run_app = True
 last_frame_time = pygame.time.get_ticks()
+test1 = TextBox(0, 0, 10, 10, "test")
 while run_app:
     event_here = tb.poll_event()
     while event_here:
