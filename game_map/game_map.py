@@ -46,13 +46,8 @@ class GameMap:
         return self.entities
 
     def draw_map(self, tb):
-        fg = termbox.BLACK
-        bg = termbox.CYAN
-
         for entitie in self.entities:
-            coordinates = entitie.get_coordinates()
-            symbol = entitie.get_symbol()
-            tb.change_cell(coordinates[0], coordinates[1], symbol, fg, bg)
+            entitie.draw(tb)
 
 
 if __name__ == '__main__':
