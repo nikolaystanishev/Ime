@@ -3,12 +3,13 @@ import pandas as pd
 import termbox
 
 
-from entities import Player, Enemy, Wall, Treasure, EndLevel, Empty
+from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel
 
 
 class GameMap:
 
     def __init__(self, game_map_file):
+        self.player = None
         self.entities = self.create_entities(game_map_file)
 
     def create_entities(self, game_map_file):
@@ -19,10 +20,12 @@ class GameMap:
 
         for row in range(grid_size[0]):
             for col in range(grid_size[1]):
-                if grid[row][col] == 0:
-                    entitie = Empty(col, row)
-                elif grid[row][col] == 1:
+                entitie = None
+
+                if grid[row][col] == 1:
                     entitie = Player(col, row)
+                    self.player = entitie
+                    continue
                 elif grid[row][col] == 2:
                     entitie = Enemy(col, row)
                 elif grid[row][col] == 3:
@@ -32,7 +35,8 @@ class GameMap:
                 elif grid[row][col] == 5:
                     entitie = EndLevel(col, row)
 
-                entities.append(entitie)
+                if entitie:
+                    entities.append(entitie)
 
         return entities
 
@@ -48,6 +52,13 @@ class GameMap:
     def draw_map(self, tb):
         for entitie in self.entities:
             entitie.draw(tb)
+
+        self.player.draw(tb)
+
+    def move_player(self, tb, event_actions):
+        self.player.change_coordinates(event_actions)
+
+        self.draw_map(tb)
 
 
 if __name__ == '__main__':
