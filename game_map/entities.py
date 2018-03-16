@@ -1,3 +1,6 @@
+import termbox
+
+
 class Entity:
 
     def __init__(self, x, y, symbol):
@@ -11,6 +14,12 @@ class Entity:
 
     def get_symbol(self):
         return self.symbol
+
+    def draw(self, tb):
+        fg = termbox.BLACK
+        bg = termbox.CYAN
+
+        tb.change_cell(self.x, self.y, self.symbol, fg, bg)
 
 
 class Player(Entity):
