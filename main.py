@@ -1,7 +1,7 @@
 import pygame.time
 import termbox
 from user_input.input_handler import InputHandler
-from events import EVENT_ACTIONS
+from user_input.events import EVENT_ACTIONS
 
 
 # CONSTATN INITIALIZATION
