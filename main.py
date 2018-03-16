@@ -3,11 +3,13 @@ import termbox
 from InputHandler import InputHandler
 from events import EVENT_ACTIONS
 
+
 # CONSTATN INITIALIZATION
 pygame.init()
 last_frame_time = 0
 tb = termbox.Termbox()
 input_handler = InputHandler()
+
 
 def update(ticks):
     # input_handler.update()
@@ -16,6 +18,7 @@ def update(ticks):
 
 run_app = True
 last_frame_time = pygame.time.get_ticks()
+
 while run_app:
     input_handler.reset_events()
     event_here = tb.poll_event()
@@ -29,3 +32,5 @@ while run_app:
     tb.clear()
     update(current_frame_ticks)
     tb.present()
+
+tb.close()
