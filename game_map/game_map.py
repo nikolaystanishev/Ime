@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import termbox
 
-
+from Inventory import Inventory
 from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel
 
 
@@ -21,23 +21,23 @@ class GameMap:
 
         for row in range(self.grid_size[0]):
             for col in range(self.grid_size[1]):
-                entitie = None
+                entity = None
 
                 if grid[row][col] == 1:
-                    entitie = Player(col, row)
-                    self.player = entitie
+                    entity = Player(col, row, Inventory())
+                    self.player = entity
                     continue
                 elif grid[row][col] == 2:
-                    entitie = Enemy(col, row)
+                    entity = Enemy(col, row)
                 elif grid[row][col] == 3:
-                    entitie = Wall(col, row)
+                    entity = Wall(col, row)
                 elif grid[row][col] == 4:
-                    entitie = Treasure(col, row)
+                    entity = Treasure(col, row)
                 elif grid[row][col] == 5:
-                    entitie = EndLevel(col, row)
+                    entity = EndLevel(col, row)
 
-                if entitie:
-                    entities.append(entitie)
+                if entity:
+                    entities.append(entity)
 
         return entities
 
@@ -51,8 +51,9 @@ class GameMap:
         return self.entities
 
     def draw_map(self, tb):
-        for entitie in self.entities:
-            entitie.draw(tb)
+        for entity in self.entities:
+            if entity.enabled:
+                entity.draw(tb)
 
         self.player.draw(tb)
 
@@ -60,7 +61,8 @@ class GameMap:
         self.player.change_coordinates(event_actions, self.entities,
                                        self.grid_size)
 
-        self.draw_map(tb)
+    def get_player(self):
+        return self.player
 
 
 if __name__ == '__main__':

@@ -18,6 +18,12 @@ tb.present()
 
 def update(ticks):
     game_map.move_player(tb, EVENT_ACTIONS)
+    entities = game_map.get_entities()
+    player = game_map.get_player()
+    if not player.check_collision(entities):
+        player.return_to_last_pos()
+
+    game_map.draw_map(tb)
     return
 
 
