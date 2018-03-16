@@ -11,22 +11,19 @@ class GameMap:
     def __init__(self, game_map_file):
         self.player = None
         self.grid_size = None
-        self.entities = self.create_entities(game_map_file)
+        self.map_file = game_map_file
 
-    def create_entities(self, game_map_file):
-        grid = self.create_grid(game_map_file)
-        self.grid_size = grid.shape
+    def load_entities(self):
+        grid = self.create_grid(self.map_file)
 
         entities = []
 
-        for row in range(self.grid_size[0]):
-            for col in range(self.grid_size[1]):
+        for row in range(grid.shape[0]):
+            for col in range(grid.shape[1]):
                 entity = None
 
                 if grid[row][col] == 1:
                     entity = Player(col, row, Inventory())
-                    self.player = entity
-                    continue
                 elif grid[row][col] == 2:
                     entity = Enemy(col, row)
                 elif grid[row][col] == 3:
@@ -46,23 +43,6 @@ class GameMap:
         grid = np.array(grid)
 
         return grid
-
-    def get_entities(self):
-        return self.entities
-
-    def draw_map(self, tb):
-        for entity in self.entities:
-            if entity.enabled:
-                entity.draw(tb)
-
-        self.player.draw(tb)
-
-    def move_player(self, tb, event_actions):
-        self.player.change_coordinates(event_actions, self.entities,
-                                       self.grid_size)
-
-    def get_player(self):
-        return self.player
 
 
 if __name__ == '__main__':
