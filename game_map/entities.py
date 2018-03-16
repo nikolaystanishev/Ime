@@ -6,44 +6,50 @@ class Entity:
 
         self.symbol = symbol
 
+    def get_coordinates(self):
+        return (self.x, self.y)
+
+    def get_symbol(self):
+        return self.symbol
+
 
 class Player(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 65
         super().__init__(x, y, symbol)
 
 
 class Enemy(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 66
         super().__init__(x, y, symbol)
 
 
 class Wall(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 67
         super().__init__(x, y, symbol)
 
 
 class Treasure(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 68
         super().__init__(x, y, symbol)
 
 
 class EndLevel(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 69
         super().__init__(x, y, symbol)
 
 
 class Empty(Entity):
 
     def __init__(self, x, y):
-        symbol = None
+        symbol = 0
         super().__init__(x, y, symbol)
