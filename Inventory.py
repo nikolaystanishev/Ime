@@ -37,7 +37,7 @@ class Inventory:
 		self.defence = defence
 
 	def get_defence(self):
-		return defence
+		return self.defence
 
 	def lose_inventory(self):
 		items = self.items

@@ -1,6 +1,13 @@
 from Inventory import Inventory
 from Item import HealingItem, DamageItem
 from typing import Type, Tuple
+import enum
+
+class BattleAction(enum.Enum):
+    ATTACK = 0
+    DEFEND = 1
+    USE = 2
+
 
 class Fight:
     def __init__(self, player_inventory, enemy_inventory):
@@ -15,7 +22,7 @@ class Fight:
         self.actions[action](self.player_inventory, self.enemy_inventory)
 
     def execute_player_use(self, item: int):
-        self.player_inventory.use(item)
+        self.player_inventory.use_item(item)
 
     def evaluate_enemy_action(self):
         # For now just Attack
@@ -27,7 +34,7 @@ class Fight:
             dmg *= 0.7
         to_inv.add_health(-dmg)
 
-    def defend(self, inv):
+    def defend(self, inv, *args):
         inv.set_defence(True)
 
     def reset_effects(self):
@@ -35,16 +42,24 @@ class Fight:
         self.enemy_inventory.set_defence(False)
 
 
-class BattleAction(enum.Enum):
-    ATTACK = 0
-    DEFEND = 1
-    USE = 2
-
-
 if __name__ == '__main__':
-    fm = Fight()
-    pl = Inventory(10, 50)
+    pl = Inventory(10, 1000)
     pl.items =  [HealingItem(1000), DamageItem(50)]
-    ai = Inventory(40, 20)
+    ai = Inventory(40, 1000)
     ai.items = [DamageItem(200), HealingItem(-150)]
-    fm.fight(pl, ai)
+    fm = Fight(pl, ai)
+    fm.execute_player_action(BattleAction.ATTACK)
+    fm.evaluate_enemy_action()
+    print(pl.health)
+    fm.execute_player_action(BattleAction.DEFEND)
+    fm.evaluate_enemy_action()
+    fm.reset_effects()
+    fm.evaluate_enemy_action()
+    print(pl.health)
+    fm.execute_player_use(1)
+    print(pl.get_combat_stats())
+    fm.execute_player_use(0)
+    print(pl.get_combat_stats())
+    fm.evaluate_enemy_action()
+    fm.evaluate_enemy_action()
+    print(pl.get_combat_stats())
