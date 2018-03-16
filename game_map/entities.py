@@ -55,10 +55,3 @@ class EndLevel(Entity):
     def __init__(self, x, y):
         symbol = 69
         super().__init__(x, y, symbol)
-
-
-class Empty(Entity):
-
-    def __init__(self, x, y):
-        symbol = 0
-        super().__init__(x, y, symbol)

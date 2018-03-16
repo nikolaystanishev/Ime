@@ -3,7 +3,7 @@ import pandas as pd
 import termbox
 
 
-from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel, Empty
+from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel
 
 
 class GameMap:
@@ -19,9 +19,9 @@ class GameMap:
 
         for row in range(grid_size[0]):
             for col in range(grid_size[1]):
-                if grid[row][col] == 0:
-                    entitie = Empty(col, row)
-                elif grid[row][col] == 1:
+                entitie = None
+
+                if grid[row][col] == 1:
                     entitie = Player(col, row)
                 elif grid[row][col] == 2:
                     entitie = Enemy(col, row)
@@ -32,7 +32,8 @@ class GameMap:
                 elif grid[row][col] == 5:
                     entitie = EndLevel(col, row)
 
-                entities.append(entitie)
+                if entitie:
+                    entities.append(entitie)
 
         return entities
 
