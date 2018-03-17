@@ -41,4 +41,3 @@ class UI:
     def on_use_press(self):
         if self.current_selectable is not None:
             self.current_selectable.on_use()
-            
