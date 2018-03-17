@@ -1,51 +1,104 @@
 from copy import deepcopy
 from abc import abstractmethod
 
+
 class Inventory:
-	def __init__(self, damage=0, health=0):
-		self.items = []
-		self.damage= damage
-		self.health = health
-		self.defence = False
+    def __init__(self, damage=0, health=0):
+        self.items = []
+        self.damage= damage
+        self.health = health
+        self.defence = False
+        self.active_buffs = []
 
-	def take_item(self, entity):
-		entity.enabled = False
-		item = deepcopy(entity.get_items())
-		if len(item) != 0:
-			self.items += item
-	
-	def use_item(self, item_num):
-		self.items[item_num].use(self)
-		del self.items[item_num]
+    def take_item(self, entity):
+        entity.enabled = False
+        item = deepcopy(entity.get_items())
+        if len(item) != 0:
+            self.items += item
+    
+    def use_item(self, item_num):
+        self.items[item_num].use(self)
+        del self.items[item_num]
 
-	def add_damage(self, damage):
-		self.damage += damage
+    def add_damage(self, damage):
+        self.damage += damage
 
-	def add_health(self, health):
-		self.health += health
+    def add_health(self, health):
+        self.health += health
 
-	def get_combat_stats(self):
-		return (self.health, self.damage)
+    # Use this method for fights as it updates the
+    # buffs on the base stats
+    def get_combat_stats(self):
+        self.activate_active_buffs()
+        return (self.health, self.damage)
 
-	def get_health(self):
-		return self.health
+    def activate_active_buffs(self):
+        for buff in self.active_buffs:
+            buff.activate(self)
 
-	def get_damage(self):
-		return self.damage
+    def get_health(self):
+        return self.health
 
-	def set_defence(self, defence):
-		self.defence = defence
+    def get_damage(self):
+        return self.damage
 
-	def get_defence(self):
-		return self.defence
+    def set_defence(self, defence):
+        self.defence = defence
 
-	def lose_inventory(self):
-		items = self.items
-		self.items = []
-		return items
+    def get_defence(self):
+        return self.defence
 
-	def __str__(self):
-		return_str = "Your inventory contains:\n"
-		for item in self.items:
-			return_str += str(item)
-		return return_str
+    def lose_inventory(self):
+        items = self.items
+        self.items = []
+        return items
+
+    # Call on turn end
+    def reset_buffs(self):
+        buffs_to_remove = []
+        for indx in range(len(self.active_buffs)):
+            buff = self.active_buffs[indx]
+            buff.revert_buff_use(self)
+            if not buff.round_pass():
+                buffs_to_remove.append(indx)
+
+        for i in buffs_to_remove[::-1]:
+            del self.active_buffs[buffs_to_remove[i]]
+
+    def __str__(self):
+        return_str = "Your inventory contains:\n"
+        for item in self.items:
+            return_str += str(item)
+        return return_str
+
+
+if __name__ == '__main__':
+    inv = Inventory(50, 50)
+
+    from Buff import Buff
+    from Item import BuffedItem
+    from game_map.entities import Treasure
+
+    buff = Buff(damage=10, health=10,active_rounds=2)
+    item = BuffedItem(buff)
+
+    tr = Treasure(1, 2, [buff])
+    inv.take_item(tr)
+    inv.use_item(0)
+    print('USED')
+
+    print(inv.health, inv.damage)
+    print(inv.get_combat_stats())
+    inv.reset_buffs()
+    # End round
+
+    print(inv.get_combat_stats())
+    inv.reset_buffs()
+    # End round
+
+    print(inv.get_combat_stats())
+    inv.reset_buffs()
+    # End round
+
+    print(inv.get_combat_stats())
+    inv.reset_buffs()

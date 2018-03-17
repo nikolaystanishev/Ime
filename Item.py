@@ -30,3 +30,14 @@ class DamageItem(Item):
 
 	def __str__(self):
 		return "Damage potion! Add {0} damage to your combat stats\n".format(self.dmg)
+
+class BuffedItem(Item):
+	def __init__(self, buff):
+		self.buff = buff
+
+	def use(self, inventory):
+		inventory.active_buffs.append(self.buff)
+
+	def __str__(self):
+		return "Item buff {0}\n".format(str(self.buff))
+
