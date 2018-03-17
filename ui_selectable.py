@@ -1,11 +1,11 @@
-from ui_element import UIElement
 from abc import abstractmethod
+
 
 class Selectable():
     def __init__(self):
         self.next_selectable = None
         self.prev_selectable = None
-    
+
     def get_next_selectable(self):
         return self.next_selectable
 
