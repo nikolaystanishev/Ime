@@ -1,5 +1,6 @@
 import termbox
 
+from user_input.events import MAP_EVENT_ACTIONS
 from typing import List,Tuple,Set,Dict# perhaps add type annotations
 # to at least the tricky operations that return a custom type to help the ide
 
@@ -47,21 +48,21 @@ class Player(Entity):
     def get_combat_stats(self):
         return self.inventory.get_combat_stats()
 
-    def update(self, ms, event_actions):
+    def update(self, ms):
         new_x = self.x
         new_y = self.y
         has_new = False
 
-        if event_actions['MOVE UP']:
+        if MAP_EVENT_ACTIONS['MOVE UP']:
             new_y -= 1
             has_new = True
-        elif event_actions['MOVE DOWN']:
+        elif MAP_EVENT_ACTIONS['MOVE DOWN']:
             new_y += 1
             has_new = True
-        elif event_actions['MOVE RIGHT']:
+        elif MAP_EVENT_ACTIONS['MOVE RIGHT']:
             new_x += 1
             has_new = True
-        elif event_actions['MOVE LEFT']:
+        elif MAP_EVENT_ACTIONS['MOVE LEFT']:
             new_x -= 1
             has_new = True
 

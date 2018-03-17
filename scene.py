@@ -1,4 +1,4 @@
-from game_map.entities import Entity
+from game_map.entities import Entity, Player
 #from ui import UI
 
 class Scene:
@@ -8,22 +8,26 @@ class Scene:
         self.UI = UI
 
     def update(self, ms):
-        for entity in entities:
-            entity.update(ms)
-        if UI not None:
-            UI.update(ms)
+        for entity in self.entities:
+            if type(entity) == Player:
+                entity.update(ms)
+                entity.handle_collision(self.entities)
+            else:
+                entity.update(ms)
+        if self.UI is not None:
+            self.UI.update(ms)
 
     def draw(self, tb):
-        for entity in entities:
+        for entity in self.entities:
             entity.draw(tb)
-        if UI not None:
-            UI.draw(tb)
+        if self.UI is not None:
+            self.UI.draw(tb)
 
 def main_menu():
     pass
 
 def game_scene(game_map):
-    SCENE_MANAGER['CurrentScene'] = game_map.load_entities()
+    SCENE_MANAGER['CurrentScene'] = Scene(game_map.load_entities(), None)
 
 def fight_scene():
     pass

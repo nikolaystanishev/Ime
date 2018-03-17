@@ -4,7 +4,7 @@ from user_input.input_handler import InputHandler
 from user_input.events import MAP_EVENT_ACTIONS
 from game_map.game_map import GameMap
 from game_map.entities import Player
-from scenes import Scene, SCENE_MANAGER
+from scene import Scene, SCENE_MANAGER
 
 
 # CONSTATN INITIALIZATION
@@ -16,17 +16,14 @@ game_map = GameMap('./game_map/game_map.csv')
 SCENE_MANAGER['GameScene'](game_map)
 
 def update(ms):
-    for entity in entities:
-        if type(entity) == Player:
-            entity.update(ms, MAP_EVENT_ACTIONS)
-            entity.handle_collision(entities)
-        else:
-            entity.update(ms)
-
+    current_scene = SCENE_MANAGER['CurrentScene']
+    if current_scene is not None:
+        current_scene.update(ms)
 
 def draw(tb):
-    for entity in entities:
-        entity.draw(tb)
+    current_scene = SCENE_MANAGER['CurrentScene']
+    if current_scene is not None:
+        current_scene.draw(tb)
 
 
 run_app = True
