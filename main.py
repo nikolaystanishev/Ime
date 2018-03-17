@@ -26,8 +26,7 @@ def update(ms):
 
 def draw(tb):
     for entity in entities:
-        if entity.enabled:
-            entity.draw(tb)
+        entity.draw(tb)
 
 
 run_app = True

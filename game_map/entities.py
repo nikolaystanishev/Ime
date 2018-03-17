@@ -25,6 +25,8 @@ class Entity:
         return
 
     def draw(self, tb):
+        if not self.enabled:
+            return
         fg = termbox.BLACK
         bg = termbox.CYAN
         tb.change_cell(self.x, self.y, self.symbol, fg, bg)
