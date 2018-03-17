@@ -62,6 +62,8 @@ class Inventory:
             if not buff.round_pass():
                 buffs_to_remove.append(indx)
 
+        self.defence = False
+
         for i in buffs_to_remove[::-1]:
             del self.active_buffs[buffs_to_remove[i]]
 

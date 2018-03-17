@@ -24,23 +24,18 @@ class Fight:
     def execute_player_use(self, item: int):
         self.player_inventory.use_item(item)
 
-    def evaluate_enemy_action(self):
+    def execute_enemy_action(self):
         # For now just Attack
         self.attack(self.enemy_inventory, self.player_inventory)
 
     def attack(self, from_inv: Type[Inventory], to_inv: Type[Inventory]):
         dmg = from_inv.get_damage()
         if to_inv.get_defence(): 
-            dmg *= 0.7
+            dmg = int(dmg * 0.7)
         to_inv.add_health(-dmg)
 
     def defend(self, inv, *args):
         inv.set_defence(True)
-
-    def reset_effects(self):
-        self.player_inventory.set_defence(False)
-        self.enemy_inventory.set_defence(False)
-
 
 if __name__ == '__main__':
     pl = Inventory(10, 1000)
