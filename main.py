@@ -16,22 +16,24 @@ game_map = GameMap('./game_map/game_map.csv')
 
 def update(ms):
     for entity in entities:
-        print(type(entity))
+        # print(type(entity))
         if type(entity) == Player:
-            entity.update(ms, MAP_EVENT_ACTIONS) 
+            entity.update(ms, MAP_EVENT_ACTIONS)
             entity.handle_collision(entities)
         else:
             entity.update(ms)
 
+
 def draw(tb):
     for entity in entities:
-        entity.draw(tb)
+        if entity.enabled:
+            entity.draw(tb)
 
 
 run_app = True
 last_frame_time = pygame.time.get_ticks()
 
-entities=game_map.load_entities()
+entities = game_map.load_entities()
 
 while run_app:
     input_handler.reset_events()
