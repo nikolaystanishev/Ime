@@ -1,10 +1,8 @@
 import pygame.time
 import termbox
 from user_input.input_handler import InputHandler
-from user_input.events import MAP_EVENT_ACTIONS
 from game_map.game_map import GameMap
-from game_map.entities import Player
-from scene import Scene, SCENE_MANAGER
+from scene_manager import SCENE_MANAGER
 
 
 # CONSTATN INITIALIZATION
@@ -13,12 +11,14 @@ last_frame_time = 0
 tb = termbox.Termbox()
 input_handler = InputHandler()
 game_map = GameMap('./game_map/game_map.csv')
-SCENE_MANAGER['GameScene'](game_map)
+SCENE_MANAGER['MainMenu'](game_map)
+
 
 def update(ms):
     current_scene = SCENE_MANAGER['CurrentScene']
     if current_scene is not None:
         current_scene.update(ms)
+
 
 def draw(tb):
     current_scene = SCENE_MANAGER['CurrentScene']
