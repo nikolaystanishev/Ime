@@ -4,6 +4,7 @@ from user_input.input_handler import InputHandler
 from user_input.events import MAP_EVENT_ACTIONS
 from game_map.game_map import GameMap
 from game_map.entities import Player
+from scenes import Scene, SCENE_MANAGER
 
 
 # CONSTATN INITIALIZATION
@@ -12,11 +13,10 @@ last_frame_time = 0
 tb = termbox.Termbox()
 input_handler = InputHandler()
 game_map = GameMap('./game_map/game_map.csv')
-
+SCENE_MANAGER['GameScene'](game_map)
 
 def update(ms):
     for entity in entities:
-        # print(type(entity))
         if type(entity) == Player:
             entity.update(ms, MAP_EVENT_ACTIONS)
             entity.handle_collision(entities)
