@@ -1,17 +1,19 @@
 from user_input.events import MAP_EVENT_ACTIONS
 from ui_selectable import Selectable
+
+
 class UI:
-    
+
     def __init__(self, elements):
         self.elements = elements
         self.current_selectable = None
         pass
 
     def update(self, ms):
-        if MAP_EVENT_ACTIONS['USE'] == True:
+        if MAP_EVENT_ACTIONS['USE']:
             self.on_use_press()
-        # if MAP_EVENT_ACTIONS['MOVE UP'] == True:
-            # self.next_selectable()
+        if MAP_EVENT_ACTIONS['MOVE UP'] or MAP_EVENT_ACTIONS['MOVE DOWN']:
+            self.next_selectable()
         for e in self.elements:
             e.update(ms)
 
