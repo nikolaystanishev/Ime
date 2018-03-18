@@ -9,6 +9,7 @@ class Inventory:
         self.health = health
         self.defence = False
         self.active_buffs = []
+        self.buffs_activated = False
 
     def take_item(self, entity):
         entity.enabled = False
@@ -33,19 +34,25 @@ class Inventory:
         return (self.health, self.damage)
 
     def activate_active_buffs(self):
+        if self.buffs_activated:
+            return
+        self.buffs_activated = True
         for buff in self.active_buffs:
             buff.activate(self)
 
     def get_health(self):
+        self.activate_active_buffs()
         return self.health
 
     def get_damage(self):
+        self.activate_active_buffs()
         return self.damage
 
     def set_defence(self, defence):
         self.defence = defence
 
     def get_defence(self):
+        self.activate_active_buffs()
         return self.defence
 
     def lose_inventory(self):
@@ -63,6 +70,7 @@ class Inventory:
                 buffs_to_remove.append(indx)
 
         self.defence = False
+        self.buffs_activated = False
 
         for i in buffs_to_remove[::-1]:
             del self.active_buffs[buffs_to_remove[i]]
@@ -72,6 +80,9 @@ class Inventory:
         for item in self.items:
             return_str += str(item)
         return return_str
+
+    def __repr__(self):
+        return self.__str__()
 
 
 if __name__ == '__main__':
