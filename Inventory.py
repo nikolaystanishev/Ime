@@ -13,7 +13,9 @@ class Inventory:
 
     def take_item(self, entity):
         entity.enabled = False
-        item = deepcopy(entity.get_items())
+        # item = deepcopy(entity.get_items())
+        item = entity.get_items()
+        print(item)
         if len(item) != 0:
             self.items += item
 
