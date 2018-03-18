@@ -1,6 +1,6 @@
 from math import inf
 from copy import deepcopy
-import ipdb
+# import ipdb
 
 from FightingMechanics import Fight, BattleAction
 
@@ -19,7 +19,11 @@ class ActionTree:
         self.path = []
         return tree
 
+
     def add_children(self, node, player_turn: bool, level):
+        if node.is_terminal():
+            return
+
         for action in self.actions:
             if player_turn:
                 pl_inv, en_inv = deepcopy(node.pl_inv), deepcopy(node.en_inv)
@@ -50,7 +54,7 @@ class ActionTree:
             
 
     def minimax(self, node, maximizing_player, depth=30):
-        ipdb.set_trace()
+        # ipdb.set_trace()
         if node.en_inv.health <= 0:
             return (1, node)
 
@@ -58,20 +62,34 @@ class ActionTree:
             return (0, node)
 
         if depth == 0 or len(node.nodes) == 0:
-            return (node.en_inv.health - node.pl_inv.health, node)
+            return ((node.pl_inv.health)/(node.en_inv.health+node.pl_inv.health+0.001), node)
 
+        values=[]
+        nodes=[]
         if maximizing_player:
             best_value =  inf * (-1)
             for child in node.nodes:
-                val, action = self.minimax(child, False, depth - 1)
+                val, parent_node = self.minimax(child, False, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
                 best_value = max(best_value, val)
-            return (best_value, action)
+            try:
+                cool_node=nodes[values.index(best_value)]
+            except:
+                pass
+            return (best_value, cool_node)
         else:
             best_value = inf
             for child in node.nodes:
-                val, action = self.minimax(child, True, depth - 1)
+                val, parent_node = self.minimax(child, True, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
                 best_value = min(best_value, val)
-            return (best_value, action)
+            try:
+                cool_node=nodes[values.index(best_value)]
+            except:
+                pass
+            return (best_value, cool_node)
 
 
 class Node:
@@ -82,6 +100,9 @@ class Node:
         self.action = action
         self.parent = parent
         self.nodes  = []
+
+    def is_terminal(self):
+        return self.pl_inv.health<=0 or self.en_inv.health<=0
 
     def add_node(self, node):
         self.nodes.append(node)
@@ -99,7 +120,7 @@ class Node:
                self.en_inv == en_inv
 
     def __str__(self):
-        return str(self.pl_inv.health) + ' ' + str(type(self.action)) + ' ' + str(self.en_inv.health)
+        return str(self.pl_inv.health) + ' ' + str(self.action) + ' ' + str(self.en_inv.health)
 
     def __repr__(self):
         return self.__str__()
@@ -114,13 +135,13 @@ def dfs(node):
 if __name__ == '__main__':
     from Inventory import Inventory
 
-    pl_inv = Inventory(20, 10)
-    en_inv = Inventory(10, 10)
+    pl_inv = Inventory(2,3)
+    en_inv = Inventory(2,4)
 
     at = ActionTree(pl_inv, en_inv)
     tree = at.generate_tree()
     # dfs(tree)
-    num, node = at.minimax(tree, True, depth=2)
+    num, node = at.minimax(tree, True, depth=10)
     print(num)
     parent = node
     while parent is not None:
