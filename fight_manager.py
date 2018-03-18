@@ -24,7 +24,7 @@ def handle_defend_button_press():
 
 def handle_item_use(item_id):
     if FIGHT_MANAGER['IsPlayerTurn'] == True:
-        FIGHT_MANAGER['CurrentFight'].execute_use(item_id)
+        FIGHT_MANAGER['CurrentFight'].execute_player_use(item_id)
         FIGHT_MANAGER['IsPlayerTurn'] = False
 
 def ai_turn(ac):

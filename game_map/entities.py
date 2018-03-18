@@ -129,7 +129,7 @@ class Wall(Entity):
 class Treasure(Entity):
 
     def __init__(self, x, y, items=[]):
-        symbol = ord('A')
+        symbol = ord('⚛')
         super().__init__(x, y, symbol)
         self.items=items
 
