@@ -20,14 +20,14 @@ class TextBox(UIElement):
                     tb.change_cell(self.x + i, self.y + j, 32, termbox.BLACK,
                                    self.border_color)
                 else:
-                    x_center = self.x + self.w / 2
+                    x_center = int(self.x + self.w / 2)
                     text_start_x = int(x_center - len(self.text) / 2)
                     text_end_x = int(x_center + len(self.text) / 2)
                     is_in_text_area_x =\
                         i + self.x >= text_start_x and i + self.x < text_end_x
-                    y_center = self.y + self.h / 2
-                    is_in_text_area_y = (j + self.y == (y_center - 1))
+                    y_center = int(self.y + self.h / 2)
+                    is_in_text_area_y = j + self.y == y_center
                     if is_in_text_area_x and is_in_text_area_y:
                         tb.change_cell(self.x + i, self.y + j,
-                                       ord(self.text[i - text_start_x]),
+                                       ord(self.text[self.x + i - text_start_x]),
                                        termbox.WHITE, termbox.BLACK)

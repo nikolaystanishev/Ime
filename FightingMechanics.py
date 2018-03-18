@@ -19,14 +19,23 @@ class Fight:
         }
 
     def execute_player_action(self, action: Type[BattleAction]):
+        if self.player_turn == False:
+            return
         self.actions[action](self.player_inventory, self.enemy_inventory)
+        self.player_turn = False
 
     def execute_player_use(self, item: int):
+        if self.player_turn == False:
+            return
         self.player_inventory.use_item(item)
+        self.player_turn = False
 
     def execute_enemy_action(self):
+        if self.player_turn == False:
+            return
         # For now just Attack
         self.attack(self.enemy_inventory, self.player_inventory)
+        self.player_turn = True
 
     def attack(self, from_inv: Type[Inventory], to_inv: Type[Inventory]):
         dmg = from_inv.get_damage()
@@ -37,6 +46,13 @@ class Fight:
     def defend(self, inv, *args):
         inv.set_defence(True)
 
+    def is_battle_over(self):
+        if(self.player_inventory.get_health() <= 0 or self.enemy_inventory.get_health() <= 0):
+            return True
+        return False
+
+
+
 if __name__ == '__main__':
     pl = Inventory(10, 1000)
     pl.items =  [HealingItem(1000), DamageItem(50)]
@@ -44,17 +60,17 @@ if __name__ == '__main__':
     ai.items = [DamageItem(200), HealingItem(-150)]
     fm = Fight(pl, ai)
     fm.execute_player_action(BattleAction.ATTACK)
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     print(pl.health)
     fm.execute_player_action(BattleAction.DEFEND)
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     fm.reset_effects()
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     print(pl.health)
     fm.execute_player_use(1)
     print(pl.get_combat_stats())
     fm.execute_player_use(0)
     print(pl.get_combat_stats())
-    fm.evaluate_enemy_action()
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
+    fm.execute_enemy_action()
     print(pl.get_combat_stats())

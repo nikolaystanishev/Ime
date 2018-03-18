@@ -23,9 +23,9 @@ class GameMap:
                 entity = None
 
                 if grid[row][col] == 1:
-                    entity = Player(col, row, Inventory())
+                    entity = Player(col, row, Inventory(2, 10))
                 elif grid[row][col] == 2:
-                    entity = Enemy(col, row)
+                    entity = Enemy(col, row, Inventory(1, 5))
                 elif grid[row][col] == 3:
                     entity = Wall(col, row)
                 elif grid[row][col] == 4:

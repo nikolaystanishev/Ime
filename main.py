@@ -11,7 +11,8 @@ last_frame_time = 0
 tb = termbox.Termbox()
 input_handler = InputHandler()
 game_map = GameMap('./game_map/game_map.csv')
-SCENE_MANAGER['MainMenu'](game_map)
+# SCENE_MANAGER['MainMenu'](game_map)
+SCENE_MANAGER['FightScene']()
 
 
 def update(ms):
