@@ -42,7 +42,7 @@ class Fight:
         self.actions[action](from_inv, to_inv)
 
     def execute_use(self, inv, item_indx: int):
-        self.inv.use_item(item_indx)
+        inv.use_item(item_indx)
 
 if __name__ == '__main__':
     pl = Inventory(10, 1000)

@@ -1,11 +1,12 @@
 from math import inf
 from copy import deepcopy
-# import ipdb
+# from functools import lru_cache
 
 from FightingMechanics import Fight, BattleAction
 
 
 class ActionTree:
+    
     def __init__(self, pl_inv, en_inv):
         self.actions = [BattleAction.ATTACK, BattleAction.DEFEND, 'use']
         self.pl_inv = pl_inv
@@ -18,7 +19,6 @@ class ActionTree:
         self.add_children(tree, True, 0)
         self.path = []
         return tree
-
 
     def add_children(self, node, player_turn: bool, level):
         if node.is_terminal():
@@ -33,7 +33,7 @@ class ActionTree:
             fight = Fight(pl_inv, en_inv)
             if type(action) is str:
                 for item in pl_inv.items:
-                    fight.execute_use(pl_inv, inv.items.index(item))
+                    fight.execute_use(pl_inv, pl_inv.items.index(item))
             else:
                 fight.execute_action(action, pl_inv, en_inv)
 
@@ -53,8 +53,8 @@ class ActionTree:
             self.add_children(curr_node, not player_turn, level+1)
             
 
+    # @lru_cache(maxsize=None)
     def minimax(self, node, maximizing_player, depth=30):
-        # ipdb.set_trace()
         if node.en_inv.health <= 0:
             return (1, node)
 
@@ -67,28 +67,27 @@ class ActionTree:
         values=[]
         nodes=[]
         if maximizing_player:
-            best_value =  inf * (-1)
+            best_value = inf * (-1)
+            cool_node = node
             for child in node.nodes:
                 val, parent_node = self.minimax(child, False, depth - 1)
                 values+=[val]
                 nodes+=[parent_node]
+                if val > best_value:
+                    cool_node = parent_node
                 best_value = max(best_value, val)
-            try:
-                cool_node=nodes[values.index(best_value)]
-            except:
-                pass
+
             return (best_value, cool_node)
         else:
             best_value = inf
+            cool_node = node
             for child in node.nodes:
                 val, parent_node = self.minimax(child, True, depth - 1)
                 values+=[val]
                 nodes+=[parent_node]
+                if val < best_value:
+                    cool_node = parent_node
                 best_value = min(best_value, val)
-            try:
-                cool_node=nodes[values.index(best_value)]
-            except:
-                pass
             return (best_value, cool_node)
 
 
@@ -125,6 +124,9 @@ class Node:
     def __repr__(self):
         return self.__str__()
 
+    def __hash__(self):
+        return 1027 * (self.pl_inv.health + self.pl_inv.damage) + 2097 * (self.en_inv.health + self.en_inv.damage)
+
 
 def dfs(node):
     for child in node.nodes:
@@ -134,9 +136,12 @@ def dfs(node):
 
 if __name__ == '__main__':
     from Inventory import Inventory
-
+    from Item import HealingItem
+    from game_map.entities import Treasure
+    t = Treasure(0, 0, [HealingItem(20)])
     pl_inv = Inventory(2,3)
-    en_inv = Inventory(2,4)
+    pl_inv.take_item(t)
+    en_inv = Inventory(4,4)
 
     at = ActionTree(pl_inv, en_inv)
     tree = at.generate_tree()
