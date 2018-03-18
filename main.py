@@ -27,11 +27,11 @@ def update_fight():
     if FIGHT_MANAGER['CurrentFight'].is_battle_over() == True:
         if FIGHT_MANAGER['CurrentFight'].get_player_inventory().get_health() > 0:
             FIGHT_MANAGER['CurrentFight'] = None
-            GAME_STATE_MANAGER['CurrentSate'] = GameState.MAP
+            GAME_STATE_MANAGER['CurrentState'] = GameState.MAP
             SCENE_MANAGER['CurrentScene'] = SCENE_MANAGER['OldScene']
         else:
             FIGHT_MANAGER['CurrentFight'] = None
-            GAME_STATE_MANAGER['CurrentSate'] = GameState.MAIN
+            GAME_STATE_MANAGER['CurrentState'] = GameState.MAIN
             global game_map
             SCENE_MANAGER['MainMenu'](game_map)
         return
