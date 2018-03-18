@@ -130,7 +130,8 @@ class Treasure(Entity):
 
     def __init__(self, x, y, items=[]):
         symbol = 68
-        super().__init__(x, y, symbol, items)
+        super().__init__(x, y, symbol)
+        self.items=items
 
 
 class EndLevel(Entity):

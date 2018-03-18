@@ -32,7 +32,7 @@ class GameMap:
                 elif grid[row][col] == 3:
                     entity = Wall(col, row)
                 elif grid[row][col] == 4:
-                    entity = Treasure(col, row)
+                    entity = Treasure(col, row, [DamageItem()])
                 elif grid[row][col] == 5:
                     entity = EndLevel(col, row)
 
