@@ -185,7 +185,7 @@ if __name__ == '__main__':
     # pl_inv.take_item(t)
     en_inv = Inventory(1,160)
 
-    at = ActionTree(pl_inv, en_inv,max_depth=40)
+    at = ActionTree(pl_inv, en_inv,max_depth=10)
     tree = at.generate_tree()
     # dfs(tree)
     import time
