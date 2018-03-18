@@ -37,6 +37,13 @@ class Fight:
     def defend(self, inv, *args):
         inv.set_defence(True)
 
+    # Methods for the tree generation: 
+    def execute_action(self, action: Type[BattleAction], from_inv, to_inv):
+        self.actions[action](from_inv, to_inv)
+
+    def execute_use(self, inv, item_indx: int):
+        self.inv.use_item(item_indx)
+
 if __name__ == '__main__':
     pl = Inventory(10, 1000)
     pl.items =  [HealingItem(1000), DamageItem(50)]
