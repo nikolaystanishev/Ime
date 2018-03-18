@@ -51,7 +51,7 @@ class FightableEntity(Entity):
 class Player(FightableEntity):
 
     def __init__(self, x, y, inventory):
-        symbol = 65
+        symbol = ord('☺')
         self.last_x = x
         self.last_y = y
         self.inventory = inventory
@@ -114,7 +114,7 @@ class Player(FightableEntity):
 class Enemy(FightableEntity):
 
     def __init__(self, x, y, inventory):
-        symbol = 66
+        symbol = ord('☠')
         super().__init__(x, y, inventory, symbol)
 
 
@@ -122,14 +122,14 @@ class Enemy(FightableEntity):
 class Wall(Entity):
 
     def __init__(self, x, y):
-        symbol = 67
+        symbol = 0
         super().__init__(x, y, symbol)
 
 
 class Treasure(Entity):
 
     def __init__(self, x, y, items=[]):
-        symbol = 68
+        symbol = ord('A')
         super().__init__(x, y, symbol, items)
 
 
