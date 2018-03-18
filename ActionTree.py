@@ -1,6 +1,7 @@
 from math import inf
 from copy import deepcopy
 # from functools import lru_cache
+import math
 
 from FightingMechanics import Fight, BattleAction
 
@@ -91,6 +92,48 @@ class ActionTree:
             return (best_value, cool_node)
 
 
+    def alphabeta(self, node, maximizing_player,alpha,beta, depth=30):
+        if node.en_inv.health <= 0:
+            return (1, node)
+
+        if node.pl_inv.health <= 0:
+            return (0, node)
+
+        if depth == 0 or len(node.nodes) == 0:
+            return ((node.pl_inv.health)/(node.en_inv.health+node.pl_inv.health+0.001), node)
+
+        values=[]
+        nodes=[]
+        if maximizing_player:
+            best_value = inf * (-1)
+            cool_node = node
+            for child in node.nodes:
+                val, parent_node = self.minimax(child, False, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
+                if val > best_value:
+                    cool_node = parent_node
+                best_value = max(best_value, val)
+                alpha=max(alpha,best_value)
+                if beta<=alpha:
+                    break
+
+            return (best_value, cool_node)
+        else:
+            best_value = inf
+            cool_node = node
+            for child in node.nodes:
+                val, parent_node = self.minimax(child, True, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
+                if val < best_value:
+                    cool_node = parent_node
+                best_value = min(best_value, val)
+                beta=min(beta,best_value)
+                if beta<=alpha:
+                    break
+            return (best_value, cool_node)
+
 class Node:
 
     def __init__(self, pl_inv, en_inv, action, parent):
@@ -133,22 +176,31 @@ def dfs(node):
         print(child)
         dfs(child)
 
-
 if __name__ == '__main__':
     from Inventory import Inventory
     from Item import HealingItem
-    from game_map.entities import Treasure
-    t = Treasure(0, 0, [HealingItem(20)])
-    pl_inv = Inventory(2,3)
-    pl_inv.take_item(t)
-    en_inv = Inventory(4,4)
+    # from game_map.entities import Treasure
+    # t = Treasure(0, 0, [HealingItem(20)])
+    pl_inv = Inventory(2,80)
+    # pl_inv.take_item(t)
+    en_inv = Inventory(1,160)
 
     at = ActionTree(pl_inv, en_inv)
     tree = at.generate_tree()
     # dfs(tree)
-    num, node = at.minimax(tree, True, depth=10)
-    print(num)
+    import time
+    tt=time.time()
+    num, node = at.minimax(tree, True, depth=100)
+    # num, node = at.alphabeta(tree, True,alpha=-math.inf,beta=math.inf, depth=20)
+    print("time_minimax{}".format(str(time.time()-tt)))
+
+    tt1=time.time()
+    num, node = at.alphabeta(tree, True,alpha=-math.inf,beta=math.inf, depth=100)
+    print("time alpha beta{}".format(str(time.time()-tt1)))
+
+    print("position evaluation:{}".format(num))
     parent = node
+
     while parent is not None:
         print(parent.action)
         parent = parent.parent
