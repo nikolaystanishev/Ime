@@ -12,8 +12,10 @@ class UI:
     def update(self, ms):
         if MAP_EVENT_ACTIONS['USE']:
             self.on_use_press()
-        if MAP_EVENT_ACTIONS['MOVE UP'] or MAP_EVENT_ACTIONS['MOVE DOWN']:
+        if MAP_EVENT_ACTIONS['MOVE DOWN']:
             self.next_selectable()
+        if MAP_EVENT_ACTIONS['MOVE UP']:
+            self.prev_selectable()
         for e in self.elements:
             e.update(ms)
 

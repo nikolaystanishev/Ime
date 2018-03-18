@@ -3,6 +3,7 @@ import termbox
 from user_input.events import MAP_EVENT_ACTIONS
 from typing import List,Tuple,Set,Dict# perhaps add type annotations
 from fight_manager import FIGHT_MANAGER
+from game_state_manager import GAME_STATE_MANAGER, GameState
 # to at least the tricky operations that return a custom type to help the ide
 
 class Entity:
@@ -54,10 +55,12 @@ class Player(FightableEntity):
         self.last_x = x
         self.last_y = y
         self.inventory = inventory
-        super().__init__(self, x, y, symbol)
+        super().__init__(x, y, inventory, symbol)
 
 
     def update(self, ms):
+        if GAME_STATE_MANAGER['CurrentState'] != GameState.MAP:
+            return
         new_x = self.x
         new_y = self.y
         has_new = False
@@ -91,8 +94,8 @@ class Player(FightableEntity):
     def on_collision(self, entity):
         # Check Entity type for Enemy
         if type(entity) is Enemy:
-            FIGHT_MANAGER
-            self.inventory.take_item(entity)
+            FIGHT_MANAGER['NewFight'](self, entity)
+            entity.enabled = False
         if type(entity) is Treasure:
             self.inventory.take_item(entity)
 
@@ -112,10 +115,7 @@ class Enemy(FightableEntity):
 
     def __init__(self, x, y, inventory):
         symbol = 66
-        self.last_x = x
-        self.last_y = y
-        self.inventory = inventory
-        super().__init__(self, x, y, symbol)
+        super().__init__(x, y, inventory, symbol)
 
 
 

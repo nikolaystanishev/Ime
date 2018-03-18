@@ -19,20 +19,14 @@ class Fight:
         }
 
     def execute_player_action(self, action: Type[BattleAction]):
-        if self.player_turn == False:
-            return
         self.actions[action](self.player_inventory, self.enemy_inventory)
         self.player_turn = False
 
     def execute_player_use(self, item: int):
-        if self.player_turn == False:
-            return
         self.player_inventory.use_item(item)
         self.player_turn = False
 
     def execute_enemy_action(self):
-        if self.player_turn == False:
-            return
         # For now just Attack
         self.attack(self.enemy_inventory, self.player_inventory)
         self.player_turn = True
@@ -45,6 +39,12 @@ class Fight:
 
     def defend(self, inv, *args):
         inv.set_defence(True)
+    
+    def get_player_inventory(self):
+        return self.player_inventory
+
+    def get_enemy_inventory(self):
+        return self.enemy_inventory
 
     def is_battle_over(self):
         if(self.player_inventory.get_health() <= 0 or self.enemy_inventory.get_health() <= 0):

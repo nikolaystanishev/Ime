@@ -1,6 +1,5 @@
 import termbox
 from textbox import TextBox
-import sys
 
 from ui_selectable import Selectable
 

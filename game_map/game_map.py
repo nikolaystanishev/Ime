@@ -3,6 +3,7 @@ import pandas as pd
 import termbox
 
 from Inventory import Inventory
+from Item import DamageItem
 from game_map.entities import Player, Enemy, Wall, Treasure, EndLevel
 
 
@@ -25,7 +26,9 @@ class GameMap:
                 if grid[row][col] == 1:
                     entity = Player(col, row, Inventory(2, 10))
                 elif grid[row][col] == 2:
-                    entity = Enemy(col, row, Inventory(1, 5))
+                    inventory = Inventory(3, 5)
+                    inventory.add_item(DamageItem())
+                    entity = Enemy(col, row, inventory)
                 elif grid[row][col] == 3:
                     entity = Wall(col, row)
                 elif grid[row][col] == 4:
