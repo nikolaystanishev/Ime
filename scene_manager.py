@@ -6,6 +6,9 @@ from fight_manager import FIGHT_MANAGER
 from game_state_manager import GAME_STATE_MANAGER, GameState
 from hp_display import HPDisplay
 
+import sys
+
+
 def main_menu(game_map):
     button1 = Button(0, 0, 20, 8, "Start",
                      lambda: SCENE_MANAGER['GameScene'](game_map))

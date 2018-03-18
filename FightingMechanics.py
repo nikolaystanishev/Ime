@@ -27,7 +27,7 @@ class Fight:
         at = cls(self.enemy_inventory, self.player_inventory)
         action = at.get_move()
         if type(action) is str:
-            print("ADD USE SUPPORT")
+            # print("ADD USE SUPPORT")
             return
         self.actions[action](self.enemy_inventory, self.player_inventory)
 
