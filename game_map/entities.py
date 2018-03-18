@@ -54,7 +54,7 @@ class Player(FightableEntity):
         self.last_x = x
         self.last_y = y
         self.inventory = inventory
-        super().__init__(x, y, symbol)
+        super().__init__(self, x, y, symbol)
 
 
     def update(self, ms):
@@ -115,7 +115,7 @@ class Enemy(FightableEntity):
         self.last_x = x
         self.last_y = y
         self.inventory = inventory
-        super().__init__(x, y, symbol)
+        super().__init__(self, x, y, symbol)
 
 
 

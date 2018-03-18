@@ -14,7 +14,7 @@ def on_fight_start():
 def on_return_to_main():
     GAME_STATE_MANAGER['CurrentState'] = GameState.MAIN
 
-GAME_STATE_MANAGER = {'CurrentState' = GameState.MAIN,
-                      'EnterMap' = on_enter_map,
-                      'StartFight' = on_fight_start,
-                      'ReturnTomain' = on_return_to_main}
+GAME_STATE_MANAGER = {'CurrentState': GameState.MAIN,
+                      'EnterMap': on_enter_map,
+                      'StartFight':on_fight_start,
+                      'ReturnTomain':on_return_to_main}

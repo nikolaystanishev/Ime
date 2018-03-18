@@ -1,9 +1,11 @@
 import pygame.time
 import termbox
 from user_input.input_handler import InputHandler
+from Item import DamageItem
 from game_map.game_map import GameMap
 from scene_manager import SCENE_MANAGER
 
+from Inventory import Inventory
 
 # CONSTATN INITIALIZATION
 pygame.init()
@@ -12,7 +14,9 @@ tb = termbox.Termbox()
 input_handler = InputHandler()
 game_map = GameMap('./game_map/game_map.csv')
 # SCENE_MANAGER['MainMenu'](game_map)
-SCENE_MANAGER['FightScene']()
+inventory = Inventory(5, 10)
+inventory.add_item(DamageItem(500))
+SCENE_MANAGER['FightScene'](inventory)
 
 
 def update(ms):

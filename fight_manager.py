@@ -23,6 +23,7 @@ def handle_defend_button_press():
         FIGHT_MANAGER['IsPlayerTurn'] = False
 
 def handle_item_use(item_id):
+    print("test")
     if FIGHT_MANAGER['IsPlayerTurn'] == True:
         FIGHT_MANAGER['CurrentFight'].execute_use(item_id)
         FIGHT_MANAGER['IsPlayerTurn'] = False
