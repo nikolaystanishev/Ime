@@ -1,12 +1,7 @@
 from Inventory import Inventory
 from Item import HealingItem, DamageItem
 from typing import Type, Tuple
-import enum
-
-class BattleAction(enum.Enum):
-    ATTACK = 0
-    DEFEND = 1
-    USE = 2
+from battle_action import BattleAction
 
 
 class Fight:
@@ -24,9 +19,16 @@ class Fight:
     def execute_player_use(self, item: int):
         self.player_inventory.use_item(item)
 
-    def execute_enemy_action(self):
+    # CLS should be from type ActionTree 
+    def execute_enemy_action(self, cls):
         # For now just Attack
-        self.attack(self.enemy_inventory, self.player_inventory)
+        at = cls(self.enemy_inventory, self.player_inventory)
+        action = at.get_move()
+        if type(action) is str:
+            print("ADD USE SUPPORT")
+            return
+        self.actions[action](self.enemy_inventory, self.player_inventory)
+
 
     def attack(self, from_inv: Type[Inventory], to_inv: Type[Inventory]):
         dmg = from_inv.get_damage()

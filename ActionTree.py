@@ -1,8 +1,8 @@
 from math import inf
 from copy import deepcopy
-# from functools import lru_cache
 
 from FightingMechanics import Fight, BattleAction
+from battle_action import BattleAction
 
 
 class ActionTree:
@@ -12,7 +12,7 @@ class ActionTree:
         self.pl_inv = pl_inv
         self.en_inv = en_inv
         self.wins = 0
-        self.max_depth = 10
+        self.max_depth = 4
 
     def generate_tree(self):
         tree = Node(deepcopy(self.pl_inv), deepcopy(self.en_inv), None, None)
@@ -54,7 +54,7 @@ class ActionTree:
             
 
     # @lru_cache(maxsize=None)
-    def minimax(self, node, maximizing_player, depth=30):
+    def minimax(self, node, maximizing_player, depth=3):
         if node.en_inv.health <= 0:
             return (1, node)
 
@@ -90,6 +90,17 @@ class ActionTree:
                 best_value = min(best_value, val)
             return (best_value, cool_node)
 
+    def get_move(self):
+        tree = self.generate_tree()
+        num, parent = self.minimax(tree, True, depth=3)
+        actions = []
+        while parent is not None:
+            actions.append(parent.action)
+            parent = parent.parent
+        actions = actions[::-1]
+        # The 0 is the None for the Head/Start of the Tree
+        # If he dies instantly it feels bad man
+        return actions[1]
 
 class Node:
 
@@ -115,8 +126,10 @@ class Node:
         self.nodes.append(node)        
 
     def __eq__(self, other):
-        return self.pl_inv == pl_inv and \
-               self.en_inv == en_inv
+        if other == None:
+            return False
+        return self.pl_inv == other.pl_inv and \
+               self.en_inv == other.en_inv
 
     def __str__(self):
         return str(self.pl_inv.health) + ' ' + str(self.action) + ' ' + str(self.en_inv.health)
@@ -136,19 +149,23 @@ def dfs(node):
 
 if __name__ == '__main__':
     from Inventory import Inventory
-    from Item import HealingItem
-    from game_map.entities import Treasure
-    t = Treasure(0, 0, [HealingItem(20)])
-    pl_inv = Inventory(2,3)
-    pl_inv.take_item(t)
-    en_inv = Inventory(4,4)
-
-    at = ActionTree(pl_inv, en_inv)
-    tree = at.generate_tree()
-    # dfs(tree)
-    num, node = at.minimax(tree, True, depth=10)
-    print(num)
-    parent = node
-    while parent is not None:
-        print(parent.action)
-        parent = parent.parent
+    from Item import HealingItem, DamageItem
+    pl = Inventory(2, 5)
+    pl.items =  [HealingItem(1000), DamageItem(50)]
+    ai = Inventory(40, 3)
+    ai.items = [DamageItem(200), HealingItem(-150)]
+    fm = Fight(pl, ai)
+    fm.execute_player_action(BattleAction.ATTACK)
+    fm.execute_enemy_action(ActionTree)
+    # fm.execute_player_action(BattleAction.DEFEND)
+    # fm.execute_enemy_action(ActionTree)
+    # fm.reset_effects()
+    # fm.execute_enemy_action(ActionTree)
+    # print(pl.health)
+    # fm.execute_player_use(1)
+    # print(pl.get_combat_stats())
+    # fm.execute_player_use(0)
+    # print(pl.get_combat_stats())
+    # fm.execute_enemy_action(ActionTree)
+    # fm.execute_enemy_action(ActionTree)
+    # print(pl.get_combat_stats())
