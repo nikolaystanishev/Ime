@@ -1,5 +1,10 @@
 from math import inf
 from copy import deepcopy
+<<<<<<< HEAD
+=======
+# from functools import lru_cache
+import math
+>>>>>>> 8371ed51476f355a5eb986ee449f73709cce9fa5
 
 from FightingMechanics import Fight, BattleAction
 from battle_action import BattleAction
@@ -7,12 +12,12 @@ from battle_action import BattleAction
 
 class ActionTree:
     
-    def __init__(self, pl_inv, en_inv):
+    def __init__(self, pl_inv, en_inv,max_depth=10):
         self.actions = [BattleAction.ATTACK, BattleAction.DEFEND, 'use']
         self.pl_inv = pl_inv
         self.en_inv = en_inv
         self.wins = 0
-        self.max_depth = 4
+        self.max_depth = max_depth
 
     def generate_tree(self):
         tree = Node(deepcopy(self.pl_inv), deepcopy(self.en_inv), None, None)
@@ -102,6 +107,48 @@ class ActionTree:
         # If he dies instantly it feels bad man
         return actions[1]
 
+    def alphabeta(self, node, maximizing_player,alpha,beta, depth=30):
+        if node.en_inv.health <= 0:
+            return (1, node)
+
+        if node.pl_inv.health <= 0:
+            return (0, node)
+
+        if depth == 0 or len(node.nodes) == 0:
+            return ((node.pl_inv.health)/(node.en_inv.health+node.pl_inv.health+0.001), node)
+
+        values=[]
+        nodes=[]
+        if maximizing_player:
+            best_value = inf * (-1)
+            cool_node = node
+            for child in node.nodes:
+                val, parent_node = self.minimax(child, False, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
+                if val > best_value:
+                    cool_node = parent_node
+                best_value = max(best_value, val)
+                alpha=max(alpha,best_value)
+                if beta<=alpha:
+                    break
+
+            return (best_value, cool_node)
+        else:
+            best_value = inf
+            cool_node = node
+            for child in node.nodes:
+                val, parent_node = self.minimax(child, True, depth - 1)
+                values+=[val]
+                nodes+=[parent_node]
+                if val < best_value:
+                    cool_node = parent_node
+                best_value = min(best_value, val)
+                beta=min(beta,best_value)
+                if beta<=alpha:
+                    break
+            return (best_value, cool_node)
+
 class Node:
 
     def __init__(self, pl_inv, en_inv, action, parent):
@@ -145,7 +192,6 @@ def dfs(node):
     for child in node.nodes:
         print(child)
         dfs(child)
-
 
 if __name__ == '__main__':
     from Inventory import Inventory
