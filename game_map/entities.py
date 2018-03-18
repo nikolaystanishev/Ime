@@ -2,12 +2,13 @@ import termbox
 
 from user_input.events import MAP_EVENT_ACTIONS
 from typing import List,Tuple,Set,Dict# perhaps add type annotations
+from fight_manager import FIGHT_MANAGER
+from game_state_manager import GAME_STATE_MANAGER, GameState
 # to at least the tricky operations that return a custom type to help the ide
 
 class Entity:
 
-    def __init__(self, x, y, symbol, items=[], enabled=True):
-        self.items = items
+    def __init__(self, x, y, symbol, enabled=True):
         self.x = x
         self.y = y
         self.enabled = enabled
@@ -32,23 +33,34 @@ class Entity:
         bg = termbox.CYAN
         tb.change_cell(self.x, self.y, self.symbol, fg, bg)
 
+class FightableEntity(Entity):
 
-class Player(Entity):
+    def __init__(self, x, y, inventory, symbol):
+        self.inventory = inventory
+        super().__init__(x, y, symbol)
+
+
+    def get_inventory(self):
+        return self.inventory
+
+
+    def get_combat_stats(self):
+        return self.inventory.get_combat_stats()
+
+
+class Player(FightableEntity):
 
     def __init__(self, x, y, inventory):
         symbol = 65
         self.last_x = x
         self.last_y = y
         self.inventory = inventory
-        super().__init__(x, y, symbol)
+        super().__init__(x, y, inventory, symbol)
 
-    def get_inventory(self):
-        return self.inventory
-
-    def get_combat_stats(self):
-        return self.inventory.get_combat_stats()
 
     def update(self, ms):
+        if GAME_STATE_MANAGER['CurrentState'] != GameState.MAP:
+            return
         new_x = self.x
         new_y = self.y
         has_new = False
@@ -81,6 +93,9 @@ class Player(Entity):
 
     def on_collision(self, entity):
         # Check Entity type for Enemy
+        if type(entity) is Enemy:
+            FIGHT_MANAGER['NewFight'](self, entity)
+            entity.enabled = False
         if type(entity) is Treasure:
             self.inventory.take_item(entity)
 
@@ -94,13 +109,14 @@ class Player(Entity):
                 is_colliding = True
         if is_colliding:
             self.return_to_last_pos()
-            
+    
 
-class Enemy(Entity):
+class Enemy(FightableEntity):
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, inventory):
         symbol = 66
-        super().__init__(x, y, symbol)
+        super().__init__(x, y, inventory, symbol)
+
 
 
 class Wall(Entity):

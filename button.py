@@ -1,6 +1,5 @@
 import termbox
 from textbox import TextBox
-import sys
 
 from ui_selectable import Selectable
 
@@ -13,10 +12,7 @@ class Button(TextBox, Selectable):
         self.handler = handler
 
     def on_use(self):
-        if self.text == 'Start':
-            self.handler()
-        elif self.text == 'Exit':
-            sys.exit(0)
+        self.handler()
 
     def on_select(self):
         self.border_color = termbox.YELLOW

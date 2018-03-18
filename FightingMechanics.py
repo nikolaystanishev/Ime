@@ -15,9 +15,11 @@ class Fight:
 
     def execute_player_action(self, action: Type[BattleAction]):
         self.actions[action](self.player_inventory, self.enemy_inventory)
+        self.player_turn = False
 
     def execute_player_use(self, item: int):
         self.player_inventory.use_item(item)
+        self.player_turn = False
 
     # CLS should be from type ActionTree 
     def execute_enemy_action(self, cls):
@@ -29,7 +31,6 @@ class Fight:
             return
         self.actions[action](self.enemy_inventory, self.player_inventory)
 
-
     def attack(self, from_inv: Type[Inventory], to_inv: Type[Inventory]):
         dmg = from_inv.get_damage()
         if to_inv.get_defence(): 
@@ -38,6 +39,19 @@ class Fight:
 
     def defend(self, inv, *args):
         inv.set_defence(True)
+    
+    def get_player_inventory(self):
+        return self.player_inventory
+
+    def get_enemy_inventory(self):
+        return self.enemy_inventory
+
+    def is_battle_over(self):
+        if(self.player_inventory.get_health() <= 0 or self.enemy_inventory.get_health() <= 0):
+            return True
+        return False
+
+
 
     # Methods for the tree generation: 
     def execute_action(self, action: Type[BattleAction], from_inv, to_inv):
@@ -53,17 +67,17 @@ if __name__ == '__main__':
     ai.items = [DamageItem(200), HealingItem(-150)]
     fm = Fight(pl, ai)
     fm.execute_player_action(BattleAction.ATTACK)
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     print(pl.health)
     fm.execute_player_action(BattleAction.DEFEND)
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     fm.reset_effects()
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
     print(pl.health)
     fm.execute_player_use(1)
     print(pl.get_combat_stats())
     fm.execute_player_use(0)
     print(pl.get_combat_stats())
-    fm.evaluate_enemy_action()
-    fm.evaluate_enemy_action()
+    fm.execute_enemy_action()
+    fm.execute_enemy_action()
     print(pl.get_combat_stats())

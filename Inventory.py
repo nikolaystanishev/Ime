@@ -16,6 +16,9 @@ class Inventory:
         item = deepcopy(entity.get_items())
         if len(item) != 0:
             self.items += item
+
+    def add_item(self, item):
+        self.items.append(item)
     
     def use_item(self, item_num):
         self.items[item_num].use(self)
@@ -59,6 +62,9 @@ class Inventory:
         items = self.items
         self.items = []
         return items
+
+    def get_items(self):
+        return self.items
 
     # Call on turn end
     def reset_buffs(self):
