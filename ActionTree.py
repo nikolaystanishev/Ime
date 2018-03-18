@@ -8,12 +8,12 @@ from FightingMechanics import Fight, BattleAction
 
 class ActionTree:
     
-    def __init__(self, pl_inv, en_inv):
+    def __init__(self, pl_inv, en_inv,max_depth=10):
         self.actions = [BattleAction.ATTACK, BattleAction.DEFEND, 'use']
         self.pl_inv = pl_inv
         self.en_inv = en_inv
         self.wins = 0
-        self.max_depth = 10
+        self.max_depth = max_depth
 
     def generate_tree(self):
         tree = Node(deepcopy(self.pl_inv), deepcopy(self.en_inv), None, None)
@@ -185,17 +185,17 @@ if __name__ == '__main__':
     # pl_inv.take_item(t)
     en_inv = Inventory(1,160)
 
-    at = ActionTree(pl_inv, en_inv)
+    at = ActionTree(pl_inv, en_inv,max_depth=40)
     tree = at.generate_tree()
     # dfs(tree)
     import time
     tt=time.time()
-    num, node = at.minimax(tree, True, depth=100)
+    num, node = at.minimax(tree, True, depth=40)
     # num, node = at.alphabeta(tree, True,alpha=-math.inf,beta=math.inf, depth=20)
     print("time_minimax{}".format(str(time.time()-tt)))
 
     tt1=time.time()
-    num, node = at.alphabeta(tree, True,alpha=-math.inf,beta=math.inf, depth=100)
+    num, node = at.alphabeta(tree, True,alpha=-math.inf,beta=math.inf, depth=40)
     print("time alpha beta{}".format(str(time.time()-tt1)))
 
     print("position evaluation:{}".format(num))
