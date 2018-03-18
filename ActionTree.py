@@ -1,11 +1,6 @@
 from math import inf
 from copy import deepcopy
-<<<<<<< HEAD
-=======
 # from functools import lru_cache
-import math
->>>>>>> 8371ed51476f355a5eb986ee449f73709cce9fa5
-
 from FightingMechanics import Fight, BattleAction
 from battle_action import BattleAction
 
@@ -105,6 +100,8 @@ class ActionTree:
         actions = actions[::-1]
         # The 0 is the None for the Head/Start of the Tree
         # If he dies instantly it feels bad man
+        if len(actions) == 1:
+            return BattleAction.DEFEND
         return actions[1]
 
     def alphabeta(self, node, maximizing_player,alpha,beta, depth=30):
@@ -203,15 +200,14 @@ if __name__ == '__main__':
     fm = Fight(pl, ai)
     fm.execute_player_action(BattleAction.ATTACK)
     fm.execute_enemy_action(ActionTree)
-    # fm.execute_player_action(BattleAction.DEFEND)
-    # fm.execute_enemy_action(ActionTree)
-    # fm.reset_effects()
-    # fm.execute_enemy_action(ActionTree)
-    # print(pl.health)
-    # fm.execute_player_use(1)
-    # print(pl.get_combat_stats())
-    # fm.execute_player_use(0)
-    # print(pl.get_combat_stats())
-    # fm.execute_enemy_action(ActionTree)
-    # fm.execute_enemy_action(ActionTree)
-    # print(pl.get_combat_stats())
+    fm.execute_player_action(BattleAction.DEFEND)
+    fm.execute_enemy_action(ActionTree)
+    fm.execute_enemy_action(ActionTree)
+    print(pl.health)
+    fm.execute_player_use(1)
+    print(pl.get_combat_stats())
+    fm.execute_player_use(0)
+    print(pl.get_combat_stats())
+    fm.execute_enemy_action(ActionTree)
+    fm.execute_enemy_action(ActionTree)
+    print(pl.get_combat_stats())
